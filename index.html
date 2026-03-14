@@ -1,0 +1,843 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Roast | Artisan Coffee House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight: #0a0a0a;
+            --charcoal: #1a1a1a;
+            --gold: #d4af37;
+            --gold-light: #f4e5c2;
+            --cream: #f5f5f0;
+            --text-gray: #888;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--midnight);
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+        }
+
+        /* Intro Animation */
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--midnight);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeOut 1s ease 3s forwards;
+            pointer-events: none;
+        }
+
+        .intro-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.5em;
+            opacity: 0;
+            animation: fadeInUp 2s ease 0.5s forwards;
+        }
+
+        .intro-line {
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            margin: 2rem 0;
+            animation: expandLine 1.5s ease 1s forwards;
+        }
+
+        .intro-sub {
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(30px); }
+        }
+
+        @keyframes expandLine {
+            to { width: 200px; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.5s;
+            mix-blend-mode: difference;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
+            padding: 1.5rem 5%;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Home Section */
+        #home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
+                        url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1920&auto=format&fit=crop') center/cover;
+            animation: slowZoom 20s infinite alternate;
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            margin-bottom: 2rem;
+        }
+
+        #home h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 2rem;
+        }
+
+        #home h1 span {
+            display: block;
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            transition: all 0.5s;
+            margin-top: 2rem;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .hero-cta:hover {
+            background: var(--gold);
+            color: var(--midnight);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-gray);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollMove 2s infinite;
+        }
+
+        @keyframes scrollMove {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(20px); opacity: 0; }
+        }
+
+        /* About Section */
+        #about {
+            background: var(--charcoal);
+            padding: 8rem 5%;
+            display: flex;
+            align-items: center;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .story-text h2 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .story-text p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .story-image {
+            position: relative;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            filter: grayscale(20%);
+        }
+
+        .story-image::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: -20px;
+            bottom: -20px;
+            border: 1px solid var(--gold);
+            z-index: -1;
+        }
+
+        .values {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            text-align: center;
+            padding: 6rem 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            margin-top: 6rem;
+        }
+
+        .value-item h3 {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+        }
+
+        .value-item p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Menu Section */
+        #menu {
+            background: linear-gradient(to bottom, var(--midnight), var(--charcoal));
+            padding: 8rem 5%;
+        }
+
+        .menu-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .menu-hero {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .menu-hero h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+        }
+
+        .menu-hero p {
+            color: var(--text-gray);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .menu-category {
+            margin-bottom: 5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding-bottom: 4rem;
+        }
+
+        .menu-category:last-child {
+            border-bottom: none;
+        }
+
+        .category-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .category-title h3 {
+            font-size: 2rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            display: inline-block;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 4rem;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1.5rem 0;
+            border-bottom: 1px dotted rgba(255,255,255,0.1);
+        }
+
+        .menu-item-info h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .menu-item-info p {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            font-weight: 400;
+        }
+
+        .highlight-box {
+            background: rgba(26, 26, 26, 0.5);
+            padding: 4rem;
+            margin: 6rem auto;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            max-width: 800px;
+        }
+
+        .highlight-box h3 {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box p {
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box .price-large {
+            color: var(--gold);
+            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Gallery Preview */
+        .gallery-preview {
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .preview-card {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+        }
+
+        .preview-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+            filter: grayscale(30%);
+        }
+
+        .preview-card:hover img {
+            transform: scale(1.1);
+            filter: grayscale(0%);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            padding: 4rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            color: var(--text-gray);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .values {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .intro-text {
+                font-size: 2rem;
+                letter-spacing: 0.3em;
+            }
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intro Animation -->
+    <div class="intro-overlay">
+        <div class="intro-text">VELVET ROAST</div>
+        <div class="intro-line"></div>
+        <div class="intro-sub">Est. 2024</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#home" class="logo">VELVET ROAST</a>
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#about" class="nav-link">Our Story</a></li>
+            <li><a href="#menu" class="nav-link">Experience</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">Artisan Coffee House</p>
+            <h1>
+                Taste the
+                <span>Extraordinary</span>
+            </h1>
+            <button class="hero-cta" onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})">Discover Our Menu</button>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="about-container">
+            <div class="section-header reveal">
+                <h2>Our Story</h2>
+                <p>Founded in 2024</p>
+            </div>
+
+            <div class="story-grid">
+                <div class="story-text reveal">
+                    <h2>Crafted with Intention</h2>
+                    <p>Velvet Roast emerged from a simple belief: that coffee deserves reverence. We are not merely a café; we are curators of moments, architects of atmosphere, and passionate advocates for the perfect cup.</p>
+                    <p>Every bean is selected through direct relationships with farmers who share our commitment to excellence. We roast in small batches, allowing the unique character of each origin to shine through.</p>
+                    <p>Our space is designed as a sanctuary from the ordinary—a place where time slows, conversations deepen, and the aroma of possibility fills the air.</p>
+                </div>
+                <div class="story-image reveal">
+                    <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&auto=format&fit=crop" alt="Coffee Pour">
+                </div>
+            </div>
+
+            <div class="values reveal">
+                <div class="value-item">
+                    <h3>Quality</h3>
+                    <p>Only the top 1% of beans make it to our roaster. We accept nothing less than perfection.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Sustainability</h3>
+                    <p>From farm to cup, we ensure ethical practices that honor both people and planet.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Community</h3>
+                    <p>We believe coffee connects people. Our space is designed for meaningful encounters.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+        <div class="menu-container">
+            <div class="menu-hero reveal">
+                <h2>The Experience</h2>
+                <p>Curated Selections</p>
+            </div>
+
+            <div class="menu-category reveal">
+                <div class="category-title">
+                    <h3>Signature Coffee</h3>
+                </div>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Velvet Espresso</h4>
+                            <p>Double shot, house blend, dark chocolate notes</p>
+                        </div>
+                        <span class="price">$6</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Gold Standard</h4>
+                            <p>Single origin Ethiopian, floral, honey finish</p>
+                        </div>
+                        <span class="price">$8</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Midnight Cold Brew</h4>
+                            <p>24-hour steeped, nitrogen infused, silky texture</p>
+                        </div>
+                        <span class="price">$7</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Cortado Royale</h4>
+                            <p>Equal parts espresso and steamed milk, gold dust</p>
+                        </div>
+                        <span class="price">$6.5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-category reveal">
+                <div class="category-title">
+                    <h3>Artisan Pastry</h3>
+                </div>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Almond Croissant</h4>
+                            <p>Butter layers, frangipane, flaked almonds</p>
+                        </div>
+                        <span class="price">$5.5</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Dark Chocolate Tart</h4>
+                            <p>Valrhona chocolate, sea salt, gold leaf</p>
+                        </div>
+                        <span class="price">$8</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Matcha Éclair</h4>
+                            <p>Ceremonial matcha, white chocolate glaze</p>
+                        </div>
+                        <span class="price">$6</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <h4>Truffle Scone</h4>
+                            <p>Black truffle, aged cheddar, chive</p>
+                        </div>
+                        <span class="price">$7</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box reveal">
+                <h3>Private Tasting</h3>
+                <p>Experience our exclusive coffee ceremony with our head roaster. Includes flight of three rare single origins and paired pastries. By appointment only.</p>
+                <div class="price-large">$45 per person</div>
+            </div>
+
+            <div class="gallery-preview reveal">
+                <div class="preview-grid">
+                    <div class="preview-card">
+                        <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=600&auto=format&fit=crop" alt="Coffee">
+                    </div>
+                    <div class="preview-card">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&auto=format&fit=crop" alt="Interior">
+                    </div>
+                    <div class="preview-card">
+                        <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=600&auto=format&fit=crop" alt="Pastry">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-logo">VR</div>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#about">Our Story</a>
+            <a href="#menu">Experience</a>
+            <a href="mailto:hello@velvetroast.com">Contact</a>
+        </div>
+        <p class="copyright">© 2024 VELVET ROAST. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Update active nav link
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+    </script>
+
+</body>
+</html>
